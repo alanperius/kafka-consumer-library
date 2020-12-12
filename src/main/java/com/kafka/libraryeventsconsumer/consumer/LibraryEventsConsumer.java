@@ -1,7 +1,10 @@
 package com.kafka.libraryeventsconsumer.consumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kafka.libraryeventsconsumer.service.LibraryEventsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +12,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LibraryEventsConsumer {
 
+    @Autowired
+    private LibraryEventsService libraryEventsService;
+
+
     @KafkaListener(topics = {"library"})
-    public void onMessage(ConsumerRecord<Integer, String> consumerRecord) throws InterruptedException {
+    public void onMessage(ConsumerRecord<Integer, String> consumerRecord) throws InterruptedException, JsonProcessingException {
         log.info("message number:: {} processed - partition::{} - msg = {} ", consumerRecord.key(), consumerRecord.partition(), consumerRecord.value());
         Thread.sleep(100);
+
+        libraryEventsService.processLibraryEvent(consumerRecord);
+        log.info("library id {} Saved", consumerRecord.key());
     }
 }
