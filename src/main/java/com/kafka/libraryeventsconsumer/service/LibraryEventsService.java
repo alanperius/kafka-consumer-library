@@ -86,24 +86,15 @@ public class LibraryEventsService {
         if (libraryEvent.getLibraryEventId() == null) {
             throw new IllegalIdentifierException("Library id is Null");
         }
-        libraryEventsRepository.findById(libraryEvent.getLibraryEventId()).orElseThrow(() -> new IllegalArgumentException("Not a valid library Event"));
+        boolean existsById = libraryEventsRepository.existsById(libraryEvent.getLibraryEventId());
+
+        if (!existsById) {
+            throw new IllegalArgumentException("Not a valid library Event");
+        }
     }
 
     private void saveLibrary(LibraryEvent libraryEvent) {
         libraryEvent.getBook().setLibraryEvent(libraryEvent);
         libraryEventsRepository.save(libraryEvent);
     }
-
-
-//    public static void main(String[] args) {
-//        // Get the array
-//        int arr[]
-//                = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//
-//        // Get the String representation of array
-//
-//        // print the String representation
-//        System.out.println("Array: " + Arrays.toString(arr));
-//    }
-
 }
