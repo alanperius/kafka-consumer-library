@@ -16,12 +16,12 @@ public class LibraryEventsConsumer {
     private LibraryEventsService libraryEventsService;
 
 
-    @KafkaListener(topics = {"library"})
+    @KafkaListener(topics = {"library3"}, concurrency = "8")
     public void onMessage(ConsumerRecord<Integer, String> consumerRecord) throws InterruptedException, JsonProcessingException {
-        log.info("message number:: {} processed - partition::{} - msg = {} ", consumerRecord.key(), consumerRecord.partition(), consumerRecord.value());
+        //log.info("message number:: {} processed - partition::{} - msg = {} ", consumerRecord.key(), consumerRecord.partition(), consumerRecord.value());
         Thread.sleep(100);
 
         libraryEventsService.processLibraryEvent(consumerRecord);
-        log.info("library id {} Saved", consumerRecord.key());
+        log.info("library id {} Saved - Partition {}", consumerRecord.key(), consumerRecord.partition());
     }
 }

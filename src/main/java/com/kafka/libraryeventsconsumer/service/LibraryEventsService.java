@@ -63,15 +63,15 @@ public class LibraryEventsService {
     public void processLibraryEvent(ConsumerRecord<Integer, String> consumerRecord) throws JsonProcessingException {
         LibraryEvent libraryEvent = objectMapper.readValue(consumerRecord.value(), LibraryEvent.class);
 
-        log.info("Library = {}", libraryEvent);
+        //log.info("Library = {}", libraryEvent);
 
         switch (libraryEvent.getLibraryEventType()) {
             case NEW:
-                log.info("NEW");
+                //log.info("NEW");
                 saveLibrary(libraryEvent);
                 break;
             case UPDATE:
-                log.info("UPDATE");
+                //log.info("UPDATE");
                 validate(libraryEvent);
                 saveLibrary(libraryEvent);
                 break;
