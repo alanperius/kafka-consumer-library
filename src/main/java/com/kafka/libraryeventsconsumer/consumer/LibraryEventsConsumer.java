@@ -22,6 +22,6 @@ public class LibraryEventsConsumer {
         Thread.sleep(100);
 
         libraryEventsService.processLibraryEvent(consumerRecord);
-        log.info("library id {} Saved - Partition {}", consumerRecord.key(), consumerRecord.partition());
+        log.info("library3 id {} Saved - Partition {}", consumerRecord.key(), consumerRecord.partition());
     }
 }
