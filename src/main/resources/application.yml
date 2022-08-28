@@ -1,6 +1,7 @@
 spring:
   profiles:
     active: local
+
 server:
   port: 8081
 ---
@@ -9,17 +10,18 @@ spring:
   profiles: local
   kafka:
     template:
-      default-topic: library3
+      default-topic: testTopic7777
     consumer:
-      bootstrap-servers: 192.168.50.200:9092, 192.168.50.200:9093, 192.168.50.200:9094, 192.168.50.140:9095, 192.168.50.140:9096, 192.168.50.140:9097
+      bootstrap-servers: kafka:9092
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
       group-id: library-events-listener-group
+
     producer:
-      bootstrap-servers: 192.168.50.200:9092, 192.168.50.200:9093, 192.168.50.200:9094, 192.168.50.140:9095, 192.168.50.140:9096, 192.168.50.140:9097
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver

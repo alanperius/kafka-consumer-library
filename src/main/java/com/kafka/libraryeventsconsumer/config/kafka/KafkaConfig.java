@@ -40,18 +40,20 @@ public class KafkaConfig {
     ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
             ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
             ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory) {
+        log.info("KAFKA CONFIG!" );
         ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         configurer.configure(factory, kafkaConsumerFactory
                 .getIfAvailable(() -> new DefaultKafkaConsumerFactory<>(this.kafkaProperties.buildConsumerProperties())));
         //Aqui seto a quantidade de THREADS que eu quero para cada instancias! ;)
-        factory.setConcurrency(10);
+        //factory.setConcurrency(16);
         //Manualmente setamos a msg como 'lida' e ela não vai ser mais consumida. è enviada direto ao offset. Esse é o modo MANUAL(AckMode.MANUAL).
         //DEFAULT É O MODO BATCH, onde a msg é lida e automaticamente é enviada ao offset
-        //factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+//        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         factory.setErrorHandler(((thrownException, data) -> {
             log.info("Exception in consumerConfig is {} and the record is {}", thrownException.getMessage(), data);
             //persist
         }));
+
         factory.setRetryTemplate(retryTemplate());
         factory.setRecoveryCallback((context -> {
             if(context.getLastThrowable().getCause() instanceof RecoverableDataAccessException){
@@ -126,7 +128,8 @@ public class KafkaConfig {
         Map<Class<? extends Throwable>, Boolean> exceptionsMap = new HashMap<>();
         exceptionsMap.put(IllegalArgumentException.class, false);
         exceptionsMap.put(RecoverableDataAccessException.class, true);
-        SimpleRetryPolicy simpleRetryPolicy = new SimpleRetryPolicy(3,exceptionsMap,true);
+        SimpleRetryPolicy simpleRetryPolicy =
+                new SimpleRetryPolicy(4,exceptionsMap,true);
         return simpleRetryPolicy;
     }
 
