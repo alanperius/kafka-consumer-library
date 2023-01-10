@@ -1,5 +1,6 @@
 package com.kafka.libraryeventsconsumer.config.kafka;
 
+import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 import com.kafka.libraryeventsconsumer.service.LibraryEventsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -40,10 +41,12 @@ public class KafkaConfig {
     ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
             ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
             ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory) {
-        log.info("KAFKA CONFIG!" );
+
         ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
         configurer.configure(factory, kafkaConsumerFactory
                 .getIfAvailable(() -> new DefaultKafkaConsumerFactory<>(this.kafkaProperties.buildConsumerProperties())));
+
         //Aqui seto a quantidade de THREADS que eu quero para cada instancias! ;)
         //factory.setConcurrency(16);
         //Manualmente setamos a msg como 'lida' e ela não vai ser mais consumida. è enviada direto ao offset. Esse é o modo MANUAL(AckMode.MANUAL).
@@ -53,7 +56,7 @@ public class KafkaConfig {
             log.info("Exception in consumerConfig is {} and the record is {}", thrownException.getMessage(), data);
             //persist
         }));
-
+        factory.getContainerProperties().setIdleBetweenPolls(60_000);
         factory.setRetryTemplate(retryTemplate());
         factory.setRecoveryCallback((context -> {
             if(context.getLastThrowable().getCause() instanceof RecoverableDataAccessException){

@@ -29,9 +29,18 @@ public class LibraryEventsConsumer {
 //
 //
 //    }
-    @KafkaListener(topics = {"testTopic7777"}, concurrency = "8")
-    public void onMessage(ConsumerRecord<Integer, String> consumerRecord) throws InterruptedException {
-        log.info("message number:: {} processed - partition::{} - msg = {} ", consumerRecord.key(), consumerRecord.partition(), consumerRecord.value());
-        Thread.sleep(4_000);
+//    @KafkaListener(topics = {"last-product-price"}, concurrency = "8")
+//    public void onMessage(ConsumerRecord<Integer, String> consumerRecord) throws InterruptedException {
+//        log.info("message number:: {} processed - partition::{} - msg = {} ", consumerRecord.key(), consumerRecord.partition(), consumerRecord.value());
+//        //Thread.sleep(4_000);
+//    }
+
+    @KafkaListener(topics = {"test-compact"})
+    public void onMessage(ConsumerRecord<Integer, String> consumerRecord) {
+        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        log.info("KEY:: {} - partition::{} - msg = {} ", consumerRecord.key(), consumerRecord.partition(), consumerRecord.value());
+
+        //send message
     }
+
 }
